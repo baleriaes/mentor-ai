@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mentor AI 🤖
 
-## Getting Started
+Mentor AI is an AI-powered learning companion that helps students study smarter by transforming their own notes and PDF documents into interactive learning experiences.
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Mentor AI is designed to make studying more engaging, personalized, and effective. Users will be able to upload their own study materials, generate AI-powered quizzes, and build a deeper understanding of what they learn.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This project is currently being developed as a software engineering project while exploring artificial intelligence and modern web development.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Current Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 🚧 Modern web application built with Next.js
+- 🚧 Responsive user interface
+- 🚧 Mentor AI platform under active development
 
-## Learn More
+## Technology Stack
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js
+- React
+- TypeScript
+- JavaScript
+- HTML
+- CSS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Status
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+🚧 Mentor AI is currently under active development. New features and improvements are added regularly.
 
-## Deploy on Vercel
+## Planned Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- 📄 Upload PDF study materials
+- 🤖 AI-powered quiz generation
+- 💬 AI study assistant
+- 🧠 Flashcard generation
+- 📚 Personalized study plans
+- 📊 Progress tracking
+- 👤 User accounts and saved study sessions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Why I Built Mentor AI
+
+I created Mentor AI to explore how artificial intelligence can make learning more interactive and personalized. This project allows me to strengthen my software engineering skills while building a tool that can help students study more effectively.
+
+## Future Goals
+
+- Deploy Mentor AI as a public web application
+- Improve the AI-powered learning experience
+- Continue expanding the platform with new learning tools
+- Build a project that demonstrates my growth as a software developer
+
+---
+
+**Built by Baleria Estrada**
+
+*Learning. Building. Improving.*
