@@ -1,15 +1,21 @@
+import Groq from "groq-sdk";
 import { NextResponse } from "next/server";
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
 export async function POST(request: Request) {
   try {
     const { message, studyText } = await request.json();
 
-    console.log("Question:", message);
-
     const prompt = `
 You are MentorAI.
 
 Answer ONLY using these notes.
+
+If the answer is not in the notes, say:
+"I couldn't find that in your uploaded notes."
 
 Study Notes:
 ${studyText}
@@ -18,30 +24,24 @@ Student Question:
 ${message}
 `;
 
-    const response = await fetch("http://localhost:11434/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "llama3.1:8b",
-        prompt,
-        stream: false,
-      }),
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.3,
     });
-
-    console.log("Ollama status:", response.status);
-
-    const data = await response.json();
-
-    console.log("Ollama response:", data);
 
     return NextResponse.json({
       success: true,
-      response: data.response,
+      response: completion.choices[0].message.content,
     });
+
   } catch (error) {
-    console.error("CHAT ERROR:", error);
+    console.error(error);
 
     return NextResponse.json(
       {
