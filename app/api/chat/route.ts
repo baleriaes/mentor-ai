@@ -1,43 +1,54 @@
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { message, studyText } = await request.json();
+  try {
+    const { message, studyText } = await request.json();
 
-  const prompt = `
+    console.log("Question:", message);
+
+    const prompt = `
 You are MentorAI.
 
-You are helping a student study.
-
-Answer ONLY using the study notes below.
-
-If the answer is not contained in the notes, say:
-
-"I couldn't find that in your uploaded notes."
+Answer ONLY using these notes.
 
 Study Notes:
-
 ${studyText}
 
 Student Question:
-
 ${message}
 `;
 
-  const response = await fetch("http://localhost:11434/api/generate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "llama3.1:8b",
-      prompt,
-      stream: false,
-    }),
-  });
+    const response = await fetch("http://localhost:11434/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama3.1:8b",
+        prompt,
+        stream: false,
+      }),
+    });
 
-  const data = await response.json();
+    console.log("Ollama status:", response.status);
 
-  return NextResponse.json({
-    response: data.response,
-  });
+    const data = await response.json();
+
+    console.log("Ollama response:", data);
+
+    return NextResponse.json({
+      success: true,
+      response: data.response,
+    });
+  } catch (error) {
+    console.error("CHAT ERROR:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: String(error),
+      },
+      { status: 500 }
+    );
+  }
 }
