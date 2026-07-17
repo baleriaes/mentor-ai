@@ -1,5 +1,9 @@
+import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { askOllama } from "@/lib/ollama";
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,11 +29,11 @@ IMPORTANT RULES:
 - Return ONLY a JSON array.
 - Do NOT write explanations.
 - Do NOT use markdown.
-- Do NOT use \`\`\`json.
-- The "answer" MUST be the EXACT text of the correct option.
-- The answer MUST match one of the four options exactly.
+- Do NOT wrap the JSON in \`\`\`.
+- Every question must have exactly four options.
+- The "answer" must exactly match one of the options.
 
-Correct Example:
+Example:
 
 [
   {
@@ -37,7 +41,7 @@ Correct Example:
     "options": [
       "Automatically assigns IP addresses",
       "Translates domain names",
-      "Connects switches",
+      "Connects networks",
       "Encrypts data"
     ],
     "answer": "Automatically assigns IP addresses"
@@ -49,7 +53,19 @@ Study Notes:
 ${text}
 `;
 
-    const response = await askOllama(prompt);
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.2,
+    });
+
+    const response =
+      completion.choices[0].message.content ?? "";
 
     const start = response.indexOf("[");
     const end = response.lastIndexOf("]");

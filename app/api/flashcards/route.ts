@@ -1,5 +1,9 @@
+import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { askOllama } from "@/lib/ollama";
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,22 +22,16 @@ export async function POST(req: NextRequest) {
     const prompt = `
 You are MentorAI.
 
-Read these study notes and create exactly 10 flashcards.
+Read these study notes and create EXACTLY 10 flashcards.
 
-Return ONLY a JSON array.
+IMPORTANT RULES:
 
-Do NOT write:
-- Here are the flashcards
-- Explanation
-- Markdown code fences
-- Any text before the JSON
-- Any text after the JSON
-
-Return ONLY the JSON array.
-
-The first character MUST be [
-
-The last character MUST be ]
+- Return ONLY a JSON array.
+- Do NOT use markdown.
+- Do NOT use \`\`\`.
+- Do NOT include explanations.
+- The first character MUST be [
+- The last character MUST be ]
 
 Example:
 
@@ -53,40 +51,51 @@ Study Notes:
 ${text}
 `;
 
-    const response = await askOllama(prompt);
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.2,
+    });
 
-// Remove Markdown code fences if the model adds them
-const start = response.indexOf("[");
-const end = response.lastIndexOf("]");
+    const response =
+      completion.choices[0].message.content ?? "";
 
-if (start === -1 || end === -1) {
-  return NextResponse.json({
-    success: false,
-    error: "No JSON array found",
-    raw: response,
-  });
-}
+    const start = response.indexOf("[");
+    const end = response.lastIndexOf("]");
 
-const jsonText = response.slice(start, end + 1);
+    if (start === -1 || end === -1) {
+      return NextResponse.json({
+        success: false,
+        error: "No JSON array found",
+        raw: response,
+      });
+    }
 
-let flashcards;
+    const jsonText = response.slice(start, end + 1);
 
-try {
-  flashcards = JSON.parse(jsonText);
-} catch (err) {
-  console.error(err);
+    let flashcards;
 
-  return NextResponse.json({
-    success: false,
-    error: "Could not parse JSON",
-    raw: jsonText,
-  });
-}
+    try {
+      flashcards = JSON.parse(jsonText);
+    } catch (err) {
+      console.error(err);
 
-return NextResponse.json({
-  success: true,
-  flashcards,
-});
+      return NextResponse.json({
+        success: false,
+        error: "Could not parse JSON",
+        raw: jsonText,
+      });
+    }
+
+    return NextResponse.json({
+      success: true,
+      flashcards,
+    });
 
   } catch (err) {
     console.error(err);
