@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getStudySession } from "@/lib/studyStore";
 
 interface QuizQuestion {
   question: string;
@@ -9,168 +10,412 @@ interface QuizQuestion {
 }
 
 export default function QuizPage() {
+
   const [quiz, setQuiz] = useState<QuizQuestion[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState("");
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [fileName, setFileName] = useState("");
 
-  async function handleUpload(
-    e: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const file = e.target.files?.[0];
 
-    if (!file) return;
+  useEffect(() => {
+    loadQuiz();
+  }, []);
 
-    setLoading(true);
-    setQuiz([]);
-    setCurrent(0);
-    setScore(0);
-    setFinished(false);
+
+
+  async function loadQuiz() {
+
+    const session = getStudySession();
+
+
+    if (!session) {
+      setLoading(false);
+      return;
+    }
+
+
+    setFileName(session.filename);
+
 
     try {
-      // Upload PDF
-      const formData = new FormData();
-      formData.append("file", file);
 
-      const uploadRes = await fetch("/api/upload", {
+      const res = await fetch("/api/quiz", {
+
         method: "POST",
-        body: formData,
-      });
 
-      const upload = await uploadRes.json();
-
-      if (!upload.success) {
-        alert("Failed to read PDF.");
-        setLoading(false);
-        return;
-      }
-
-      // Generate Quiz
-      const quizRes = await fetch("/api/quiz", {
-        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
-          text: upload.text,
+          text: session.text,
         }),
+
       });
 
-      const result = await quizRes.json();
 
-      if (!result.success) {
-        console.error(result);
-        alert("Failed to generate quiz.");
-        setLoading(false);
-        return;
+      const data = await res.json();
+
+
+      if (data.success) {
+        setQuiz(data.quiz);
       }
 
-      setQuiz(result.quiz);
 
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong.");
+    } catch (error) {
+
+      console.error(error);
+
     }
+
 
     setLoading(false);
+
   }
 
+
+
+
   function submitAnswer() {
+
     if (!selected) return;
 
+
     if (selected === quiz[current].answer) {
-      setScore(score + 1);
+
+      setScore((prev) => prev + 1);
+
     }
+
 
     setSelected("");
 
+
     if (current === quiz.length - 1) {
+
       setFinished(true);
+
     } else {
-      setCurrent(current + 1);
+
+      setCurrent((prev) => prev + 1);
+
     }
+
   }
 
+
+
+
+
   return (
-    <main className="min-h-screen bg-slate-950 text-white flex flex-col items-center p-10">
 
-      <h1 className="text-5xl font-bold mb-6">
-        MentorAI Quiz
-      </h1>
+    <main className="min-h-[calc(100vh-80px)] bg-slate-950 text-white">
 
-      <p className="text-gray-400 mb-8">
-        Upload a PDF to generate an AI quiz.
-      </p>
 
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={handleUpload}
-      />
+      <div className="mx-auto max-w-5xl px-8 py-16">
 
-      {loading && (
-        <p className="mt-8 text-xl">
-          🤖 Creating Quiz...
-        </p>
-      )}
 
-      {!loading && quiz.length > 0 && !finished && (
-        <div className="mt-10 w-full max-w-3xl border rounded-xl p-8 bg-slate-900">
+        <div className="mb-12 text-center">
 
-          <h2 className="text-2xl font-bold mb-4">
-            Question {current + 1} / {quiz.length}
-          </h2>
+          <h1 className="text-5xl font-bold">
+            AI Quiz
+          </h1>
 
-          <p className="text-lg mb-6">
-            {quiz[current].question}
+
+          <p className="mt-4 text-lg text-slate-400">
+            Test yourself on your uploaded study material.
           </p>
 
-          <div className="flex flex-col gap-4">
+        </div>
 
-            {quiz[current].options.map((option) => (
 
-              <button
-                key={option}
-                onClick={() => setSelected(option)}
-                className={`border rounded-lg p-3 text-left transition ${
-                  selected === option
-                    ? "bg-blue-600"
-                    : "bg-slate-800 hover:bg-slate-700"
-                }`}
-              >
-                {option}
-              </button>
 
-            ))}
+
+
+        <div className="rounded-3xl border border-slate-700 bg-slate-900 p-8 shadow-xl">
+
+
+
+
+
+          <div className="mb-8 rounded-2xl bg-slate-950 p-5">
+
+            <p className="text-sm text-slate-400">
+              Current Document
+            </p>
+
+
+            <h2 className="mt-2 text-2xl font-semibold">
+              {fileName || "No document selected"}
+            </h2>
+
 
           </div>
 
-          <button
-            onClick={submitAnswer}
-            className="mt-8 bg-green-600 px-6 py-3 rounded-lg hover:bg-green-700"
-          >
-            Submit Answer
-          </button>
+
+
+
+
+
+          {loading && (
+
+            <div className="rounded-2xl bg-slate-950 p-10 text-center">
+
+              <p className="text-xl font-semibold text-cyan-400">
+                🤖 MentorAI is creating your quiz...
+              </p>
+
+
+              <p className="mt-3 text-slate-500">
+                This usually takes a few seconds.
+              </p>
+
+
+            </div>
+
+          )}
+
+
+
+
+
+
+
+          {!loading && quiz.length === 0 && (
+
+            <div className="rounded-2xl bg-slate-950 p-10 text-center">
+
+              <p className="text-xl">
+                No quiz available.
+              </p>
+
+
+              <p className="mt-3 text-slate-500">
+                Upload a document from the Study page first.
+              </p>
+
+
+            </div>
+
+          )}
+
+
+
+
+
+
+
+          {!loading && quiz.length > 0 && !finished && (
+
+            <>
+
+
+              <h2 className="mb-6 text-2xl font-bold">
+
+                Question {current + 1} of {quiz.length}
+
+              </h2>
+
+
+
+
+
+              <p className="mb-8 text-xl leading-relaxed">
+
+                {quiz[current].question}
+
+              </p>
+
+
+
+
+
+
+              <div className="space-y-4">
+
+
+                {quiz[current].options.map((option,index)=>(
+
+
+                  <button
+
+                    key={option}
+
+                    onClick={() => setSelected(option)}
+
+                    className={`flex w-full items-center gap-4 rounded-2xl border p-5 text-left transition ${
+                      
+                      selected === option
+
+                      ? "border-cyan-400 bg-cyan-500/20"
+
+                      : "border-slate-700 bg-slate-950 hover:border-cyan-400 hover:bg-slate-900"
+
+                    }`}
+
+                  >
+
+
+
+                    <span
+
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold ${
+                        
+                        selected === option
+
+                        ? "bg-cyan-400 text-slate-950"
+
+                        : "bg-slate-800 text-cyan-300"
+
+                      }`}
+
+                    >
+
+                      {String.fromCharCode(65 + index)}
+
+                    </span>
+
+
+
+
+                    <span className="leading-relaxed">
+
+                      {option}
+
+                    </span>
+
+
+
+                  </button>
+
+
+                ))}
+
+
+
+              </div>
+
+
+
+
+
+
+
+              <div className="mt-8 flex items-center justify-between">
+
+
+                <p className="text-lg">
+
+                  Score:
+
+                  {" "}
+
+                  <span className="font-bold">
+                    {score}
+                  </span>
+
+
+                </p>
+
+
+
+
+
+                <button
+
+                  onClick={submitAnswer}
+
+                  disabled={!selected}
+
+                  className="rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:opacity-40"
+
+                >
+
+                  {current === quiz.length - 1
+                    ? "Finish Quiz"
+                    : "Next Question"}
+
+                </button>
+
+
+
+              </div>
+
+
+
+            </>
+
+          )}
+
+
+
+
+
+
+
+
+          {finished && (
+
+            <div className="rounded-2xl bg-slate-950 p-10 text-center">
+
+
+              <h2 className="text-4xl font-bold">
+                🎉 Quiz Complete!
+              </h2>
+
+
+
+              <p className="mt-8 text-2xl">
+                Final Score
+              </p>
+
+
+
+              <p className="mt-4 text-6xl font-bold text-cyan-400">
+
+                {score} / {quiz.length}
+
+              </p>
+
+
+
+              <p className="mt-6 text-slate-400">
+
+                {score === quiz.length
+
+                ? "Perfect score! Outstanding work."
+
+                : score >= quiz.length * 0.8
+
+                ? "Excellent job!"
+
+                : score >= quiz.length * 0.6
+
+                ? "Nice work! Keep practicing."
+
+                : "Review your material and try again."}
+
+              </p>
+
+
+
+            </div>
+
+          )}
+
+
 
         </div>
-      )}
 
-      {finished && (
-        <div className="mt-10 border rounded-xl p-8 bg-slate-900">
 
-          <h2 className="text-3xl font-bold mb-4">
-            Quiz Complete!
-          </h2>
+      </div>
 
-          <p className="text-xl">
-            Score: {score} / {quiz.length}
-          </p>
-
-        </div>
-      )}
 
     </main>
+
   );
+
 }
