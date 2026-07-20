@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getStudySession } from "@/lib/studyStore";
 
 interface Flashcard {
   question: string;
@@ -11,14 +12,22 @@ export default function FlashcardsPage() {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [current, setCurrent] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [fileName, setFileName] = useState("");
+
   useEffect(() => {
+    loadFlashcards();
+  }, []);
+
   async function loadFlashcards() {
-    const text = sessionStorage.getItem("studyText");
+    const session = getStudySession();
 
-    if (!text) return;
+    if (!session) {
+      setLoading(false);
+      return;
+    }
 
-    setLoading(true);
+    setFileName(session.filename);
 
     try {
       const res = await fetch("/api/flashcards", {
@@ -27,79 +36,19 @@ export default function FlashcardsPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text,
+          text: session.text,
         }),
       });
 
-      const result = await res.json();
+      const data = await res.json();
 
-      if (result.success) {
-        setFlashcards(result.flashcards);
+      if (data.success) {
+        setFlashcards(data.flashcards);
+      } else {
+        console.error(data.error);
       }
     } catch (err) {
       console.error(err);
-    }
-
-    setLoading(false);
-  }
-
-  loadFlashcards();
-}, []);
-
-  async function handleUpload(
-    e: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const file = e.target.files?.[0];
-
-    if (!file) return;
-
-    setLoading(true);
-    setFlashcards([]);
-    setCurrent(0);
-    setShowAnswer(false);
-
-    try {
-      // Upload PDF
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const uploadRes = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const upload = await uploadRes.json();
-
-      if (!upload.success) {
-        alert("Failed to read PDF");
-        setLoading(false);
-        return;
-      }
-
-      // Generate flashcards
-      const flashcardRes = await fetch("/api/flashcards", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: upload.text,
-        }),
-      });
-
-      const result = await flashcardRes.json();
-
-      if (!result.success) {
-        console.error(result);
-        alert("Failed to generate flashcards");
-        setLoading(false);
-        return;
-      }
-
-      setFlashcards(result.flashcards);
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong.");
     }
 
     setLoading(false);
@@ -120,87 +69,146 @@ export default function FlashcardsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white flex flex-col items-center p-10">
+    <main className="min-h-[calc(100vh-80px)]">
 
-      <h1 className="text-5xl font-bold mb-4">
-        MentorAI Flashcards
-      </h1>
+      <div className="mx-auto max-w-5xl py-16">
 
-      <p className="text-gray-400 mb-8">
-        Upload a PDF to generate AI flashcards.
-      </p>
+        <div className="text-center mb-12">
 
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={handleUpload}
-        className="mb-8"
-      />
+          <h1 className="text-5xl font-bold">
+            AI Flashcards
+          </h1>
 
-      {loading && (
-        <p className="text-xl">
-          🤖 Creating Flashcards...
-        </p>
-      )}
-
-      {!loading && flashcards.length > 0 && (
-        <div className="w-full max-w-2xl">
-
-          <div className="border rounded-xl p-8 bg-slate-900">
-
-            <h2 className="text-xl font-bold mb-4">
-              Card {current + 1} of {flashcards.length}
-            </h2>
-
-            <p className="text-lg">
-              <strong>Question:</strong>
-            </p>
-
-            <p className="mb-6 mt-2">
-              {flashcards[current].question}
-            </p>
-
-            {showAnswer && (
-              <>
-                <p className="text-lg font-bold">
-                  Answer:
-                </p>
-
-                <p className="mt-2 text-green-400">
-                  {flashcards[current].answer}
-                </p>
-              </>
-            )}
-
-          </div>
-
-          <div className="flex justify-center gap-4 mt-6">
-
-            <button
-              onClick={previousCard}
-              className="bg-gray-700 px-5 py-2 rounded-lg"
-            >
-              Previous
-            </button>
-
-            <button
-              onClick={() => setShowAnswer(!showAnswer)}
-              className="bg-blue-600 px-5 py-2 rounded-lg"
-            >
-              {showAnswer ? "Hide Answer" : "Show Answer"}
-            </button>
-
-            <button
-              onClick={nextCard}
-              className="bg-green-600 px-5 py-2 rounded-lg"
-            >
-              Next
-            </button>
-
-          </div>
+          <p className="mt-4 text-lg text-slate-400">
+            Review important concepts from your uploaded study material.
+          </p>
 
         </div>
-      )}
+
+        <div className="rounded-3xl border border-slate-700 bg-slate-900 p-8 shadow-xl">
+
+          <div className="mb-8 rounded-2xl bg-slate-950 p-5">
+
+            <p className="text-sm text-slate-400">
+              Current Document
+            </p>
+
+            <h2 className="mt-2 text-2xl font-semibold">
+              {fileName || "No document selected"}
+            </h2>
+
+          </div>
+
+          {!loading && flashcards.length === 0 && (
+
+            <div className="rounded-2xl bg-slate-950 p-10 text-center">
+
+              <p className="text-xl">
+                No flashcards available.
+              </p>
+
+              <p className="mt-3 text-slate-500">
+                Upload a PDF from the Study page first.
+              </p>
+
+            </div>
+
+          )}
+
+          {loading && (
+
+            <div className="rounded-2xl bg-slate-950 p-10 text-center">
+
+              <div className="text-xl font-semibold text-cyan-400">
+                🤖 MentorAI is creating flashcards...
+              </div>
+
+              <p className="mt-4 text-slate-500">
+                This usually takes a few seconds.
+              </p>
+
+            </div>
+
+          )}
+
+          {!loading && flashcards.length > 0 && (
+                        <>
+
+              <div
+                onClick={() => setShowAnswer(!showAnswer)}
+                className="cursor-pointer rounded-2xl bg-slate-950 p-10 transition hover:border hover:border-cyan-500"
+              >
+
+                <div className="mb-6 flex items-center justify-between">
+
+                  <h2 className="text-xl font-bold">
+                    Card {current + 1} of {flashcards.length}
+                  </h2>
+
+                  <span className="text-sm text-slate-500">
+                    Click card to flip
+                  </span>
+
+                </div>
+
+                {!showAnswer ? (
+
+                  <div className="min-h-[180px] flex items-center justify-center">
+
+                    <p className="text-2xl text-center font-semibold">
+                      {flashcards[current].question}
+                    </p>
+
+                  </div>
+
+                ) : (
+
+                  <div className="min-h-[180px] flex items-center justify-center">
+
+                    <p className="text-xl text-center leading-8 text-green-400">
+                      {flashcards[current].answer}
+                    </p>
+
+                  </div>
+
+                )}
+
+              </div>
+
+              <div className="mt-8 flex justify-between">
+
+                <button
+                  onClick={previousCard}
+                  disabled={current === 0}
+                  className="rounded-xl bg-slate-800 px-6 py-3 disabled:opacity-40"
+                >
+                  ← Previous
+                </button>
+
+                <button
+                  onClick={() => setShowAnswer(!showAnswer)}
+                  className="rounded-xl bg-cyan-600 px-6 py-3 hover:bg-cyan-500"
+                >
+                  {showAnswer ? "Show Question" : "Show Answer"}
+                </button>
+
+                <button
+                  onClick={nextCard}
+                  disabled={current === flashcards.length - 1}
+                  className="rounded-xl bg-cyan-600 px-6 py-3 disabled:opacity-40 hover:bg-cyan-500"
+                >
+                  Next →
+                </button>
+
+              </div>
+
+            </>
+
+          )}
+
+        </div>
+
+      </div>
 
     </main>
   );

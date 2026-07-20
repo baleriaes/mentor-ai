@@ -1,82 +1,268 @@
-import Link from "next/link";
+"use client";
+
+import { useEffect, useState } from "react";
+import { getStudySession, StudySession } from "@/lib/studyStore";
+import DashboardQuickActions from "@/components/DashboardQuickActions";
 
 export default function Dashboard() {
+
+  const [session, setSession] = useState<StudySession | null>(null);
+
+  useEffect(() => {
+    setSession(getStudySession());
+  }, []);
+
+
+  const wordCount = session
+    ? session.text.trim().split(/\s+/).filter(Boolean).length
+    : 0;
+
+
   return (
-    <main className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center px-8 py-16">
 
-      <h1 className="text-6xl font-extrabold mb-4">
-        🤖 MentorAI
-      </h1>
+    <main className="min-h-[calc(100vh-80px)] bg-slate-950 text-white">
 
-      <p className="text-xl text-gray-400 text-center max-w-2xl mb-12">
-        Upload your study notes and let AI generate summaries,
-        quizzes, flashcards, and personalized tutoring.
-      </p>
+      <div className="mx-auto max-w-7xl px-8 py-16">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
 
-        <Link
-          href="/upload"
-          className="bg-blue-600 hover:bg-blue-700 rounded-2xl p-10 transition shadow-xl"
-        >
-          <div className="text-5xl">📄</div>
+        {/* Header */}
 
-          <h2 className="text-3xl font-bold mt-6">
-            AI Summary
+        <section className="mb-12">
+
+          <h1 className="text-5xl font-bold">
+            Welcome Back 👋
+          </h1>
+
+          <p className="mt-4 text-lg text-slate-400">
+            Your AI-powered learning workspace is ready.
+          </p>
+
+        </section>
+
+
+
+        {/* Stats */}
+
+        <section className="grid gap-6 md:grid-cols-4">
+
+
+          <div className="rounded-3xl border border-slate-700 bg-slate-900 p-6">
+
+            <p className="text-sm text-slate-400">
+              Documents
+            </p>
+
+            <h2 className="mt-3 text-4xl font-bold">
+              {session ? "1" : "0"}
+            </h2>
+
+            <p className="mt-2 text-slate-500">
+              Uploaded PDFs
+            </p>
+
+          </div>
+
+
+
+          <div className="rounded-3xl border border-slate-700 bg-slate-900 p-6">
+
+            <p className="text-sm text-slate-400">
+              Words
+            </p>
+
+            <h2 className="mt-3 text-4xl font-bold">
+              {wordCount.toLocaleString()}
+            </h2>
+
+            <p className="mt-2 text-slate-500">
+              Extracted content
+            </p>
+
+          </div>
+
+
+
+          <div className="rounded-3xl border border-slate-700 bg-slate-900 p-6">
+
+            <p className="text-sm text-slate-400">
+              AI Tools
+            </p>
+
+            <h2 className="mt-3 text-4xl font-bold">
+              4
+            </h2>
+
+            <p className="mt-2 text-slate-500">
+              Summary, Quiz, Flashcards, Tutor
+            </p>
+
+          </div>
+
+
+
+          <div className="rounded-3xl border border-slate-700 bg-slate-900 p-6">
+
+            <p className="text-sm text-slate-400">
+              Status
+            </p>
+
+            <h2 className="mt-3 text-xl font-bold text-cyan-400">
+              {session ? "Ready" : "Waiting"}
+            </h2>
+
+            <p className="mt-2 text-slate-500">
+              AI Learning System
+            </p>
+
+          </div>
+
+
+        </section>
+
+
+
+
+        {/* Current Document */}
+
+
+        <section className="mt-12 rounded-3xl border border-slate-700 bg-slate-900 p-8">
+
+
+          <h2 className="text-3xl font-bold">
+            Continue Learning
           </h2>
 
-          <p className="mt-3 text-blue-100">
-            Upload a PDF and instantly generate an AI-powered summary.
-          </p>
-        </Link>
 
-        <Link
-          href="/quiz"
-          className="bg-purple-600 hover:bg-purple-700 rounded-2xl p-10 transition shadow-xl"
-        >
-          <div className="text-5xl">❓</div>
 
-          <h2 className="text-3xl font-bold mt-6">
-            Quiz Generator
+          {session ? (
+
+            <div className="mt-6 rounded-2xl bg-slate-950 p-6">
+
+
+              <h3 className="text-2xl font-semibold">
+                📘 {session.filename}
+              </h3>
+
+
+              <p className="mt-3 text-slate-400">
+                Uploaded:
+                {" "}
+                {new Date(session.uploadedAt).toLocaleDateString()}
+              </p>
+
+
+
+              <div className="mt-6 flex flex-wrap gap-4">
+
+
+                <a
+                  href="/chat"
+                  className="rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-400"
+                >
+                  Open AI Tutor
+                </a>
+
+
+
+                <a
+                  href="/summary"
+                  className="rounded-xl border border-slate-700 px-6 py-3 hover:border-cyan-400"
+                >
+                  View Summary
+                </a>
+
+
+
+                <a
+                  href="/flashcards"
+                  className="rounded-xl border border-slate-700 px-6 py-3 hover:border-cyan-400"
+                >
+                  Flashcards
+                </a>
+
+
+
+                <a
+                  href="/quiz"
+                  className="rounded-xl border border-slate-700 px-6 py-3 hover:border-cyan-400"
+                >
+                  Quiz
+                </a>
+
+
+              </div>
+
+
+            </div>
+
+
+          ) : (
+
+            <div className="mt-6 rounded-2xl border border-dashed border-slate-700 p-10 text-center text-slate-400">
+
+              Upload a document to start learning.
+
+            </div>
+
+          )}
+
+
+
+        </section>
+
+
+
+
+
+        {/* Quick Actions */}
+
+
+        <DashboardQuickActions />
+
+
+
+
+
+        {/* Activity */}
+
+
+        <section className="mt-12 rounded-3xl border border-slate-700 bg-slate-900 p-8">
+
+
+          <h2 className="text-3xl font-bold">
+            Recent Activity
           </h2>
 
-          <p className="mt-3 text-purple-100">
-            Test yourself with AI-generated multiple-choice questions.
-          </p>
-        </Link>
 
-        <Link
-          href="/flashcards"
-          className="bg-green-600 hover:bg-green-700 rounded-2xl p-10 transition shadow-xl"
-        >
-          <div className="text-5xl">🧠</div>
+          <div className="mt-6 space-y-4">
 
-          <h2 className="text-3xl font-bold mt-6">
-            Flashcards
-          </h2>
 
-          <p className="mt-3 text-green-100">
-            Memorize concepts using AI-generated flashcards.
-          </p>
-        </Link>
+            <div className="rounded-xl bg-slate-950 p-5">
+              📄 Upload documents and create your study workspace.
+            </div>
 
-        <Link
-          href="/chat"
-          className="bg-orange-600 hover:bg-orange-700 rounded-2xl p-10 transition shadow-xl"
-        >
-          <div className="text-5xl">🤖</div>
 
-          <h2 className="text-3xl font-bold mt-6">
-            AI Tutor
-          </h2>
+            <div className="rounded-xl bg-slate-950 p-5">
+              🧠 Generate AI-powered learning materials.
+            </div>
 
-          <p className="mt-3 text-orange-100">
-            Ask questions about your uploaded notes and receive instant answers.
-          </p>
-        </Link>
+
+            <div className="rounded-xl bg-slate-950 p-5">
+              🎓 Learn concepts with MentorAI Tutor.
+            </div>
+
+
+          </div>
+
+
+        </section>
+
 
       </div>
 
+
     </main>
+
   );
+
 }
