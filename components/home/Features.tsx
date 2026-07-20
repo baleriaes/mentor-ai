@@ -9,85 +9,206 @@ import {
   Bot,
 } from "@/components/ui/Icons";
 
+
 const features = [
+
   {
     icon: FileText,
-    title: "AI Summaries",
+    number: "01",
+    title: "Understand Your Material",
+    subtitle: "AI Summary",
     href: "/summary",
     description:
-      "Turn long lecture notes, textbooks, and research papers into concise summaries you can review in minutes.",
+      "MentorAI analyzes your uploaded documents and creates clear summaries that highlight the most important concepts.",
   },
+
+
   {
     icon: Brain,
-    title: "Smart Flashcards",
+    number: "02",
+    title: "Remember What You Learn",
+    subtitle: "AI Flashcards",
     href: "/flashcards",
     description:
-      "Generate interactive flashcards automatically from your study material and reinforce learning with active recall.",
+      "Turn your study material into interactive flashcards designed for active recall and better memory.",
   },
+
+
   {
     icon: CircleHelp,
-    title: "AI Quizzes",
+    number: "03",
+    title: "Test Your Knowledge",
+    subtitle: "AI Quiz",
     href: "/quiz",
     description:
-      "Challenge yourself with AI-generated multiple-choice quizzes based entirely on your uploaded documents.",
+      "Practice with AI-generated questions based on your own uploaded materials.",
   },
+
+
   {
     icon: Bot,
-    title: "AI Tutor",
+    number: "04",
+    title: "Master Difficult Topics",
+    subtitle: "AI Tutor",
     href: "/chat",
     description:
-      "Ask questions naturally and receive detailed explanations grounded in your own study material.",
+      "Ask questions and receive personalized explanations with your AI learning assistant.",
   },
+
 ];
 
+
+
 export default function Features() {
+
+
   return (
+
     <section className="py-24">
+
+
       <div className="mx-auto max-w-7xl px-8">
+
+
+
+
+
         <div className="mx-auto max-w-3xl text-center">
+
+
           <p className="font-semibold uppercase tracking-[0.25em] text-cyan-400">
-            Everything You Need
+
+            Your AI Study Workflow
+
           </p>
+
+
 
           <h2 className="mt-4 text-4xl font-bold md:text-5xl">
-            One Workspace.
-            <br />
-            Four Powerful AI Tools.
+
+            From PDF To Mastery
+
           </h2>
 
+
+
+
           <p className="mt-6 text-lg leading-8 text-slate-400">
-            MentorAI transforms static PDFs into an interactive learning
-            experience so you can spend less time organizing notes and more
-            time understanding them.
+
+            MentorAI transforms your study materials into a complete learning
+            experience designed to help you understand, remember, and master
+            new concepts.
+
           </p>
+
+
         </div>
+
+
+
+
+
+
+
 
         <div className="mt-16 grid gap-8 md:grid-cols-2">
-          {features.map((feature) => {
+
+
+
+          {features.map((feature)=>{
+
+
             const Icon = feature.icon;
 
+
+
             return (
+
+
               <Link
+
                 href={feature.href}
+
                 key={feature.title}
-                className="group block rounded-3xl border border-slate-800 bg-slate-900 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400 hover:shadow-xl"
+
+                className="group rounded-3xl border border-slate-800 bg-slate-900 p-8 transition hover:-translate-y-1 hover:border-cyan-400"
+
               >
-                <div className="inline-flex rounded-2xl bg-cyan-500/10 p-4 text-cyan-400 transition group-hover:scale-105">
-                  <Icon size={32} />
+
+
+
+                <div className="flex items-start justify-between">
+
+
+                  <div className="rounded-2xl bg-cyan-500/10 p-4 text-cyan-400">
+
+                    <Icon size={32}/>
+
+                  </div>
+
+
+
+                  <span className="text-4xl font-black text-slate-700">
+
+                    {feature.number}
+
+                  </span>
+
+
+
                 </div>
 
-                <h3 className="mt-8 text-2xl font-bold">
+
+
+
+
+
+                <p className="mt-8 text-sm font-semibold text-cyan-400">
+
+                  {feature.subtitle}
+
+                </p>
+
+
+
+
+                <h3 className="mt-3 text-2xl font-bold">
+
                   {feature.title}
+
                 </h3>
 
+
+
+
                 <p className="mt-4 leading-8 text-slate-400">
+
                   {feature.description}
+
                 </p>
+
+
+
+
               </Link>
+
+
             );
+
+
           })}
+
+
+
         </div>
+
+
+
       </div>
+
+
     </section>
+
   );
+
 }
