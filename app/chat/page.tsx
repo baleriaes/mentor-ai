@@ -10,32 +10,62 @@ interface Message {
   content: string;
 }
 
+
 const modes = {
+
   study: {
     label: "📄 Study Mode",
-    description: "Answers using your uploaded notes",
+    description:
+      "Your document tutor. Answers using your uploaded notes only.",
   },
 
   learn: {
     label: "🎓 Learn Mode",
-    description: "Teaches any topic step-by-step",
+    description:
+      "Your personal teacher. Explains any topic step-by-step.",
   },
 
   general: {
     label: "💬 General AI",
-    description: "Ask anything",
+    description:
+      "Your everyday AI assistant for questions, writing, and ideas.",
   },
+
 };
 
-const suggestions = [
-  "Explain subnetting simply",
-  "Teach me BGP",
-  "Create a study plan",
-  "Explain the OSI model",
-];
+
+
+const suggestions = {
+
+  study: [
+    "Summarize my uploaded notes",
+    "Explain the main concepts",
+    "What should I study first?",
+    "Create exam questions",
+  ],
+
+
+  learn: [
+    "Explain networking like I am a beginner",
+    "Teach me the OSI model",
+    "Explain BGP step-by-step",
+    "Create a study plan",
+  ],
+
+
+  general: [
+    "Help me write an email",
+    "Explain a difficult concept",
+    "Help me plan my week",
+    "Give me ideas for a project",
+  ],
+
+};
+
 
 
 export default function ChatPage() {
+
 
   const [mode,setMode] = useState<Mode>("study");
 
@@ -47,40 +77,55 @@ export default function ChatPage() {
 
 
 
+
+
   async function askAI(custom?:string){
+
 
     const question = custom || message;
 
+
     if(!question.trim()) return;
+
 
 
     const session = getStudySession();
 
 
-    const updatedMessages = [
+
+    const updatedMessages: Message[] = [
+
       ...messages,
+
       {
-        role:"user" as const,
-        content:question
+        role:"user",
+        content:question,
       }
+
     ];
 
 
+
     setMessages(updatedMessages);
+
     setMessage("");
+
     setLoading(true);
 
 
 
+
     try {
+
 
       const response = await fetch("/api/chat",{
 
         method:"POST",
 
         headers:{
-          "Content-Type":"application/json"
+          "Content-Type":"application/json",
         },
+
 
         body:JSON.stringify({
 
@@ -90,9 +135,9 @@ export default function ChatPage() {
 
           studyText:session?.text || "",
 
-          history:messages
+          history:messages,
 
-        })
+        }),
 
       });
 
@@ -106,22 +151,26 @@ export default function ChatPage() {
 
         ...updatedMessages,
 
+
         {
 
           role:"ai",
 
           content:data.success
             ? data.response
-            : "I had trouble answering that. Please try again."
+            : "I could not answer that. Please try again.",
 
         }
 
       ]);
 
 
-    }
 
-    catch(error){
+    } catch(error){
+
+
+      console.error(error);
+
 
       setMessages([
 
@@ -131,7 +180,7 @@ export default function ChatPage() {
 
           role:"ai",
 
-          content:"Something went wrong."
+          content:"Something went wrong. Please try again.",
 
         }
 
@@ -140,9 +189,13 @@ export default function ChatPage() {
     }
 
 
+
     setLoading(false);
 
   }
+
+
+
 
 
 
@@ -161,6 +214,8 @@ export default function ChatPage() {
 
 
 
+
+
 return (
 
 <main className="min-h-[calc(100vh-80px)] bg-slate-950 text-white">
@@ -169,14 +224,15 @@ return (
 <div className="mx-auto max-w-5xl px-8 py-14">
 
 
+
 <h1 className="text-center text-5xl font-bold">
 
-MentorAI Tutor
+🤖 MentorAI Tutor
 
 </h1>
 
 
-<p className="mt-4 text-center text-slate-400">
+<p className="mt-4 text-center text-lg text-slate-400">
 
 Your personal AI learning assistant.
 
@@ -184,26 +240,31 @@ Your personal AI learning assistant.
 
 
 
-{/* MODE SELECTOR */}
 
 
-<div className="mt-10 rounded-2xl border border-slate-700 bg-slate-900 p-5">
+
+<div className="mt-10 rounded-2xl border border-slate-700 bg-slate-900 p-6">
 
 
 <label className="text-sm text-slate-400">
 
-Current Mode
+Choose how MentorAI helps you
 
 </label>
+
 
 
 <select
 
 value={mode}
 
-onChange={(e)=>setMode(e.target.value as Mode)}
+onChange={(e)=>{
 
-className="mt-3 w-full rounded-xl bg-slate-950 p-4 text-white border border-slate-700"
+setMode(e.target.value as Mode);
+
+}}
+
+className="mt-3 w-full rounded-xl border border-slate-700 bg-slate-950 p-4"
 
 >
 
@@ -233,7 +294,7 @@ className="mt-3 w-full rounded-xl bg-slate-950 p-4 text-white border border-slat
 
 
 
-<p className="mt-3 text-sm text-slate-400">
+<p className="mt-4 text-slate-400">
 
 {modes[mode].description}
 
@@ -246,13 +307,14 @@ className="mt-3 w-full rounded-xl bg-slate-950 p-4 text-white border border-slat
 
 
 
-{/* CHAT BOX */}
 
 
 <div className="mt-8 rounded-3xl border border-slate-700 bg-slate-900 p-6">
 
 
-<div className="min-h-[450px] space-y-4 rounded-2xl bg-slate-950 p-6 overflow-y-auto">
+
+<div className="min-h-[450px] rounded-2xl bg-slate-950 p-6 overflow-y-auto space-y-4">
+
 
 
 {messages.length===0 && (
@@ -269,28 +331,33 @@ className="mt-3 w-full rounded-xl bg-slate-950 p-4 text-white border border-slat
 
 <p className="mt-3 text-slate-400">
 
-Ask a question and start learning.
+What would you like to do?
 
 </p>
 
 
+
+
 <div className="mt-8 grid gap-3">
 
-{suggestions.map((s)=>(
+
+{suggestions[mode].map((item)=>(
+
 
 <button
 
-key={s}
+key={item}
 
-onClick={()=>askAI(s)}
+onClick={()=>askAI(item)}
 
-className="rounded-xl border border-slate-700 p-3 hover:border-cyan-400"
+className="rounded-xl border border-slate-700 p-4 text-left hover:border-cyan-400"
 
 >
 
-{s}
+{item}
 
 </button>
+
 
 ))}
 
@@ -305,6 +372,8 @@ className="rounded-xl border border-slate-700 p-3 hover:border-cyan-400"
 
 
 
+
+
 {messages.map((msg,index)=>(
 
 
@@ -312,7 +381,7 @@ className="rounded-xl border border-slate-700 p-3 hover:border-cyan-400"
 
 key={index}
 
-className={`rounded-2xl p-4 max-w-[80%] whitespace-pre-wrap ${
+className={`max-w-[80%] rounded-2xl p-4 whitespace-pre-wrap ${
 msg.role==="user"
 
 ?
@@ -327,14 +396,15 @@ msg.role==="user"
 
 >
 
-
 {msg.content}
-
 
 </div>
 
 
 ))}
+
+
+
 
 
 
@@ -349,7 +419,9 @@ msg.role==="user"
 )}
 
 
+
 </div>
+
 
 
 
@@ -366,9 +438,10 @@ onKeyDown={handleKey}
 
 placeholder="Ask MentorAI anything..."
 
-className="mt-6 w-full rounded-2xl border border-slate-700 bg-slate-950 p-5 outline-none focus:border-cyan-400"
+className="mt-6 w-full rounded-2xl border border-slate-700 bg-slate-950 p-5 focus:border-cyan-400 outline-none"
 
 />
+
 
 
 
@@ -387,7 +460,9 @@ className="mt-4 rounded-xl bg-cyan-500 px-8 py-3 font-bold text-slate-950"
 </button>
 
 
+
 </div>
+
 
 
 </div>
