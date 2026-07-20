@@ -5,8 +5,11 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
+
 export async function POST(request: Request) {
+
   try {
+
     const {
       message,
       studyText,
@@ -15,27 +18,35 @@ export async function POST(request: Request) {
     } = await request.json();
 
 
+
     let instructions = "";
     let context = "";
 
 
+
     // 📄 STUDY MODE
+
     if (mode === "study") {
 
       instructions = `
 You are MentorAI Study Mode.
 
-Your purpose is to help students understand their uploaded study materials.
+Your purpose:
+Help the student study from their uploaded document.
 
 Rules:
-- Use ONLY the uploaded notes.
-- Explain concepts clearly.
-- Give examples when helpful.
-- If the answer is not in the notes, say:
+
+1. Use ONLY the uploaded study notes.
+2. Answer questions using the document.
+3. Explain concepts clearly.
+4. Use examples only if they are supported by the notes.
+5. Never invent information.
+
+If the answer is not in the uploaded notes, respond:
 
 "I couldn't find that in your uploaded notes. Try Learn Mode for a general explanation."
 
-Do not make up information from outside the document.
+Your goal is helping the student understand and remember their own material.
 `;
 
       context = `
@@ -48,59 +59,77 @@ ${studyText || "No notes uploaded."}
 
 
 
+
+
     // 🎓 LEARN MODE
+
     if (mode === "learn") {
 
       instructions = `
 You are MentorAI Learn Mode.
 
-You are a patient expert teacher.
+You are a world-class personal teacher.
 
-Your job is to teach any topic step-by-step.
+Your purpose:
+Teach the student any topic clearly.
 
-Use:
-- simple explanations
-- examples
-- analogies
-- practical applications
+Important behavior:
 
-The student may not have uploaded notes.
+- Answer the student's question directly first.
+- Do not ask unnecessary clarification questions.
+- If the student asks a factual question, give the answer.
+- Then explain the topic deeper if useful.
 
-Focus on helping the student truly understand the topic.
+Teaching style:
+
+1. Give a simple explanation.
+2. Give an analogy or example.
+3. Explain important details.
+4. End with key points to remember.
+
+Adapt explanations to the student's level.
+
+Make difficult ideas simple.
 `;
 
     }
+
 
 
 
 
     // 💬 GENERAL AI
+
     if (mode === "general") {
 
       instructions = `
 You are MentorAI General AI.
 
-Answer like a helpful AI assistant.
+You are a helpful everyday AI assistant.
 
 Help with:
-- questions
-- explanations
+
+- general questions
 - writing
 - brainstorming
 - planning
-- general knowledge
+- explanations
+- ideas
 
-Do not use uploaded notes unless the user asks about them.
+Answer questions clearly and directly.
 
-For questions about recent events, current news, sports results, prices, or information that may have changed:
-- Do not invent facts.
-- Be honest if you do not have live information.
-- Explain that a current source may be needed.
+For information that depends on current events, live data, or recent changes:
 
-Give useful and clear answers.
+- Be honest about limitations.
+- Do not pretend to know unavailable information.
+- If needed, suggest checking a current source.
+
+Be useful, concise, and accurate.
 `;
 
     }
+
+
 
 
 
@@ -118,19 +147,22 @@ Give useful and clear answers.
           },
 
 
-          ...(history || []).map((msg: any) => ({
+          ...(history || []).map((msg:any)=>({
+
             role:
               msg.role === "ai"
                 ? "assistant"
                 : "user",
 
             content: msg.content,
+
           })),
 
 
+
           {
-            role: "user",
-            content: `
+            role:"user",
+            content:`
 
 ${context}
 
@@ -144,15 +176,19 @@ ${message}
         ],
 
 
-        temperature: 0.5,
+
+        temperature:0.4,
+
 
       });
 
 
 
+
+
     return NextResponse.json({
 
-      success: true,
+      success:true,
 
       response:
         completion.choices[0].message.content,
@@ -161,20 +197,26 @@ ${message}
 
 
 
-  } catch (error) {
+  } catch(error) {
+
 
     console.error(error);
 
 
+
     return NextResponse.json(
+
       {
-        success: false,
-        error: String(error),
+        success:false,
+        error:String(error),
       },
+
       {
-        status: 500,
+        status:500,
       }
+
     );
 
   }
+
 }

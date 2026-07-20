@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { getStudySession } from "@/lib/studyStore";
 
 interface QuizQuestion {
@@ -18,6 +19,7 @@ export default function QuizPage() {
   const [finished, setFinished] = useState(false);
   const [loading, setLoading] = useState(true);
   const [fileName, setFileName] = useState("");
+
 
 
   useEffect(() => {
@@ -61,7 +63,9 @@ export default function QuizPage() {
 
 
       if (data.success) {
+
         setQuiz(data.quiz);
+
       }
 
 
@@ -79,6 +83,7 @@ export default function QuizPage() {
 
 
 
+
   function submitAnswer() {
 
     if (!selected) return;
@@ -86,12 +91,13 @@ export default function QuizPage() {
 
     if (selected === quiz[current].answer) {
 
-      setScore((prev) => prev + 1);
+      setScore((previous) => previous + 1);
 
     }
 
 
     setSelected("");
+
 
 
     if (current === quiz.length - 1) {
@@ -100,7 +106,7 @@ export default function QuizPage() {
 
     } else {
 
-      setCurrent((prev) => prev + 1);
+      setCurrent((previous) => previous + 1);
 
     }
 
@@ -121,7 +127,7 @@ export default function QuizPage() {
         <div className="mb-12 text-center">
 
           <h1 className="text-5xl font-bold">
-            AI Quiz
+            ❓ AI Quiz
           </h1>
 
 
@@ -135,9 +141,7 @@ export default function QuizPage() {
 
 
 
-        <div className="rounded-3xl border border-slate-700 bg-slate-900 p-8 shadow-xl">
-
-
+        <div className="rounded-3xl border border-slate-700 bg-slate-900 p-8">
 
 
 
@@ -164,44 +168,13 @@ export default function QuizPage() {
 
             <div className="rounded-2xl bg-slate-950 p-10 text-center">
 
-              <p className="text-xl font-semibold text-cyan-400">
+              <p className="text-xl text-cyan-400">
                 🤖 MentorAI is creating your quiz...
               </p>
 
-
-              <p className="mt-3 text-slate-500">
-                This usually takes a few seconds.
-              </p>
-
-
             </div>
 
           )}
-
-
-
-
-
-
-
-          {!loading && quiz.length === 0 && (
-
-            <div className="rounded-2xl bg-slate-950 p-10 text-center">
-
-              <p className="text-xl">
-                No quiz available.
-              </p>
-
-
-              <p className="mt-3 text-slate-500">
-                Upload a document from the Study page first.
-              </p>
-
-
-            </div>
-
-          )}
-
 
 
 
@@ -212,7 +185,6 @@ export default function QuizPage() {
 
             <>
 
-
               <h2 className="mb-6 text-2xl font-bold">
 
                 Question {current + 1} of {quiz.length}
@@ -221,14 +193,9 @@ export default function QuizPage() {
 
 
 
-
-
-              <p className="mb-8 text-xl leading-relaxed">
-
+              <p className="mb-8 text-xl">
                 {quiz[current].question}
-
               </p>
-
 
 
 
@@ -236,9 +203,7 @@ export default function QuizPage() {
 
               <div className="space-y-4">
 
-
                 {quiz[current].options.map((option,index)=>(
-
 
                   <button
 
@@ -249,52 +214,23 @@ export default function QuizPage() {
                     className={`flex w-full items-center gap-4 rounded-2xl border p-5 text-left transition ${
                       
                       selected === option
-
                       ? "border-cyan-400 bg-cyan-500/20"
-
-                      : "border-slate-700 bg-slate-950 hover:border-cyan-400 hover:bg-slate-900"
+                      : "border-slate-700 bg-slate-950 hover:border-cyan-400"
 
                     }`}
 
                   >
 
-
-
-                    <span
-
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold ${
-                        
-                        selected === option
-
-                        ? "bg-cyan-400 text-slate-950"
-
-                        : "bg-slate-800 text-cyan-300"
-
-                      }`}
-
-                    >
-
+                    <span className="font-bold text-cyan-400">
                       {String.fromCharCode(65 + index)}
-
                     </span>
 
-
-
-
-                    <span className="leading-relaxed">
-
-                      {option}
-
-                    </span>
-
+                    {option}
 
 
                   </button>
 
-
                 ))}
-
-
 
               </div>
 
@@ -302,25 +238,14 @@ export default function QuizPage() {
 
 
 
+              <div className="mt-8 flex justify-between items-center">
 
 
-              <div className="mt-8 flex items-center justify-between">
-
-
-                <p className="text-lg">
-
+                <p>
                   Score:
-
                   {" "}
-
-                  <span className="font-bold">
-                    {score}
-                  </span>
-
-
+                  <strong>{score}</strong>
                 </p>
-
-
 
 
 
@@ -330,7 +255,7 @@ export default function QuizPage() {
 
                   disabled={!selected}
 
-                  className="rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:opacity-40"
+                  className="rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 disabled:opacity-40"
 
                 >
 
@@ -341,7 +266,6 @@ export default function QuizPage() {
                 </button>
 
 
-
               </div>
 
 
@@ -349,7 +273,6 @@ export default function QuizPage() {
             </>
 
           )}
-
 
 
 
@@ -382,23 +305,52 @@ export default function QuizPage() {
 
 
 
+
               <p className="mt-6 text-slate-400">
 
                 {score === quiz.length
-
-                ? "Perfect score! Outstanding work."
-
-                : score >= quiz.length * 0.8
-
-                ? "Excellent job!"
-
-                : score >= quiz.length * 0.6
-
-                ? "Nice work! Keep practicing."
-
-                : "Review your material and try again."}
+                  ? "Perfect score! Outstanding work."
+                  : "Great effort! Keep learning."}
 
               </p>
+
+
+
+
+              <div className="mt-10 flex justify-center gap-5">
+
+
+                <Link
+
+                  href="/flashcards"
+
+                  className="rounded-xl bg-slate-800 px-6 py-3 hover:bg-slate-700"
+
+                >
+
+                  ← Review Flashcards
+
+                </Link>
+
+
+
+
+
+                <Link
+
+                  href="/chat"
+
+                  className="rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 hover:bg-cyan-400"
+
+                >
+
+                  Ask AI Tutor →
+
+                </Link>
+
+
+
+              </div>
 
 
 
