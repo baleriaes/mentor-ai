@@ -1,55 +1,82 @@
-# Mentor AI 🤖
+# MentorAI 🤖
 
-Mentor AI is an AI-powered learning companion that helps students study smarter by transforming their own notes and PDF documents into interactive learning experiences.
+MentorAI is an AI-powered study assistant that transforms personal study materials into interactive learning experiences.
 
-## Overview
+Upload PDF notes, textbooks, or study guides and use AI to generate summaries, flashcards, quizzes, and personalized tutoring.
 
-Mentor AI is designed to make studying more engaging, personalized, and effective. Users will be able to upload their own study materials, generate AI-powered quizzes, and build a deeper understanding of what they learn.
+---
 
-This project is currently being developed as a software engineering project while exploring artificial intelligence and modern web development.
+## ✨ Features
 
-## Current Features
+### 📄 PDF Study Upload
 
-- 🚧 Modern web application built with Next.js
-- 🚧 Responsive user interface
-- 🚧 Mentor AI platform under active development
+Upload your own learning materials and allow MentorAI to analyze your documents.
 
-## Technology Stack
+### 📝 AI Summaries
+
+Generate clear summaries that highlight the most important concepts from your study material.
+
+### 🧠 AI Flashcards
+
+Create interactive flashcards to improve memorization and active recall.
+
+### ❓ AI Quiz Generation
+
+Test your understanding with AI-generated questions based on your uploaded documents.
+
+### 🤖 AI Tutor
+
+Learn with different AI learning modes:
+
+**📄 Study Mode**
+- Answers questions using your uploaded notes.
+
+**🎓 Learn Mode**
+- Explains concepts step-by-step like a personal tutor.
+
+**💬 General AI Mode**
+- Helps with general questions, explanations, brainstorming, and learning.
+
+### 📊 Dashboard
+
+Track your current study session and uploaded documents.
+
+### 👤 Profile
+
+View your learning information and study material statistics.
+
+---
+
+# 🛠 Technology Stack
+
+## Frontend
 
 - Next.js
 - React
 - TypeScript
-- JavaScript
-- HTML
-- CSS
+- Tailwind CSS
 
-## Project Status
+## Artificial Intelligence
 
-🚧 Mentor AI is currently under active development. New features and improvements are added regularly.
+- Groq AI API
+- Llama language models
 
-## Planned Features
+## Document Processing
 
-- 📄 Upload PDF study materials
-- 🤖 AI-powered quiz generation
-- 💬 AI study assistant
-- 🧠 Flashcard generation
-- 📚 Personalized study plans
-- 📊 Progress tracking
-- 👤 User accounts and saved study sessions
+- PDF text extraction
+- Study session management
 
-## Why I Built Mentor AI
+## Development Tools
 
-I created Mentor AI to explore how artificial intelligence can make learning more interactive and personalized. This project allows me to strengthen my software engineering skills while building a tool that can help students study more effectively.
-
-## Future Goals
-
-- Deploy Mentor AI as a public web application
-- Improve the AI-powered learning experience
-- Continue expanding the platform with new learning tools
-- Build a project that demonstrates my growth as a software developer
+- Git
+- GitHub
+- Vercel
 
 ---
 
-**Built by Baleria Estrada**
+# 🚀 Getting Started
 
-*Learning. Building. Improving.*
+Clone the repository:
+
+```bash
+git clone https://github.com/baleriaes/mentor-ai.git
