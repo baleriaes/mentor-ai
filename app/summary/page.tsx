@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getStudySession } from "@/lib/studyStore";
 import type { StudySession } from "@/lib/studyStore";
+import ReactMarkdown from "react-markdown";
 
 export default function SummaryPage() {
   const [session, setSession] = useState<StudySession | null>(null);
@@ -133,9 +134,20 @@ export default function SummaryPage() {
 
             <div className="rounded-2xl bg-slate-950 p-8">
 
-              <div className="whitespace-pre-line leading-8 text-slate-300">
-                {summary}
-              </div>
+              <div className="prose prose-invert max-w-none text-slate-300">
+  <div className="mb-6 flex justify-end">
+    <button
+      onClick={() => navigator.clipboard.writeText(summary)}
+      className="rounded-lg bg-cyan-500 px-4 py-2 font-semibold text-slate-950 hover:bg-cyan-400 transition"
+    >
+      📋 Copy Summary
+    </button>
+  </div>
+
+  <ReactMarkdown>
+    {summary}
+  </ReactMarkdown>
+</div>
 
             </div>
 
