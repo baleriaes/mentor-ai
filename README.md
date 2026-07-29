@@ -1,16 +1,34 @@
 # 🧠 MentorAI
 
-Transform PDFs into AI-powered summaries, flashcards, quizzes, and personalized tutoring.
+Transform PDFs into AI-powered summaries, flashcards, quizzes, and an AI tutor.
 
-MentorAI is a modern AI study platform built with **Next.js**, **TypeScript**, **Tailwind CSS**, and **Groq AI**. Students can upload PDFs, chat with their notes, generate AI-powered summaries, create flashcards, and test their knowledge with interactive quizzes—all from one learning workspace.
+MentorAI is a modern AI study platform built with Next.js, TypeScript, Tailwind CSS, and Groq AI. Upload PDF notes to generate AI-powered summaries, flashcards, quizzes, and an AI tutor.
 
----
+# 🌐 Live Demo
 
-## 🌐 Live Demo
+**Live Demo:** <https://mentor-ai-jet-seven.vercel.app>
 
-**Website:** https://mentor-ai-jet-seven.vercel.app
+# 📸 Screenshots
 
----
+### 🏠 Home
+![Home](public/screenshots/hero.png)
+
+### 📄 Upload PDF
+![Upload](public/screenshots/upload.png)
+
+### 📝 AI Summary
+![Summary](public/screenshots/summary.png)
+
+### 🧠 AI Flashcards
+![Flashcards](public/screenshots/flashcards.png)
+
+### ✅ AI Quiz
+![Quiz](public/screenshots/quiz.png)
+
+### 💬 AI Tutor
+![Tutor](public/screenshots/tutor.png)
+
+
 
 # ✨ Features
 
@@ -39,7 +57,7 @@ View your current study session and navigate between learning tools.
 ### 👤 Profile
 Access study information and learning statistics.
 
----
+
 
 # 🛠 Tech Stack
 
@@ -51,7 +69,7 @@ Access study information and learning statistics.
 | Deployment | Vercel |
 | Version Control | Git & GitHub |
 
----
+
 
 # 🚀 Getting Started
 
@@ -79,7 +97,7 @@ Open your browser and visit:
 http://localhost:3000
 ```
 
----
+
 
 # 📁 Project Structure
 
@@ -93,7 +111,7 @@ mentor-ai/
 └── README.md
 ```
 
----
+
 
 # 🚀 Future Roadmap
 
@@ -105,7 +123,7 @@ mentor-ai/
 - Spaced repetition learning
 - Mobile optimization
 
----
+
 
 # 👨‍💻 Author
 
