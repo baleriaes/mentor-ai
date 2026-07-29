@@ -1,76 +1,55 @@
-# MentorAI 🤖
+# 🧠 MentorAI
 
-MentorAI is an AI-powered study assistant that transforms personal study materials into interactive learning experiences.
+Transform PDFs into AI-powered summaries, flashcards, quizzes, and personalized tutoring.
 
-Upload PDF notes, textbooks, or study guides and use AI to generate summaries, flashcards, quizzes, and personalized tutoring.
+MentorAI is a modern AI study platform built with **Next.js**, **TypeScript**, **Tailwind CSS**, and **Groq AI**. Students can upload PDFs, chat with their notes, generate AI-powered summaries, create flashcards, and test their knowledge with interactive quizzes—all from one learning workspace.
 
 ---
 
-## ✨ Features
+## 🌐 Live Demo
 
-### 📄 PDF Study Upload
+**Website:** https://mentor-ai-jet-seven.vercel.app
 
-Upload your own learning materials and allow MentorAI to analyze your documents.
+---
 
-### 📝 AI Summaries
+# ✨ Features
 
-Generate clear summaries that highlight the most important concepts from your study material.
-
-### 🧠 AI Flashcards
-
-Create interactive flashcards to improve memorization and active recall.
-
-### ❓ AI Quiz Generation
-
-Test your understanding with AI-generated questions based on your uploaded documents.
+### 📄 PDF Upload
+Upload PDF notes, textbooks, or study guides and let MentorAI analyze your study materials.
 
 ### 🤖 AI Tutor
+Choose between three learning modes:
 
-Learn with different AI learning modes:
+- **📄 Study Mode** – Answers questions using your uploaded notes.
+- **🎓 Learn Mode** – Explains concepts step-by-step like a personal tutor.
+- **💬 General AI** – Helps with writing, brainstorming, explanations, and everyday questions.
 
-**📄 Study Mode**
-- Answers questions using your uploaded notes.
+### 📝 AI Summaries
+Generate concise, easy-to-understand summaries that highlight the most important concepts from your documents.
 
-**🎓 Learn Mode**
-- Explains concepts step-by-step like a personal tutor.
+### 🧠 AI Flashcards
+Create AI-generated flashcards to reinforce learning through active recall.
 
-**💬 General AI Mode**
-- Helps with general questions, explanations, brainstorming, and learning.
+### ❓ AI Quizzes
+Test your understanding with automatically generated multiple-choice quizzes based on your uploaded documents.
 
-### 📊 Dashboard
-
-Track your current study session and uploaded documents.
+### 📊 Study Dashboard
+View your current study session and navigate between learning tools.
 
 ### 👤 Profile
-
-View your learning information and study material statistics.
+Access study information and learning statistics.
 
 ---
 
-# 🛠 Technology Stack
+# 🛠 Tech Stack
 
-## Frontend
-
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-
-## Artificial Intelligence
-
-- Groq AI API
-- Llama language models
-
-## Document Processing
-
-- PDF text extraction
-- Study session management
-
-## Development Tools
-
-- Git
-- GitHub
-- Vercel
+| Category | Technologies |
+|----------|--------------|
+| Frontend | Next.js, React, TypeScript, Tailwind CSS |
+| Artificial Intelligence | Groq API, Llama Models |
+| Document Processing | PDF Text Extraction |
+| Deployment | Vercel |
+| Version Control | Git & GitHub |
 
 ---
 
@@ -80,3 +59,56 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/baleriaes/mentor-ai.git
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open your browser and visit:
+
+```
+http://localhost:3000
+```
+
+---
+
+# 📁 Project Structure
+
+```
+mentor-ai/
+├── app/
+├── components/
+├── lib/
+├── public/
+├── styles/
+└── README.md
+```
+
+---
+
+# 🚀 Future Roadmap
+
+- User authentication
+- Cloud document storage
+- Progress analytics
+- AI study plans
+- Multi-document conversations
+- Spaced repetition learning
+- Mobile optimization
+
+---
+
+# 👨‍💻 Author
+
+**Baleria Estrada**
+
+Built as a personal project to explore AI-powered education and create a smarter, more interactive way for students to study using modern web technologies.
