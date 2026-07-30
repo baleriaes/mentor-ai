@@ -1,12 +1,36 @@
 # 🧠 MentorAI
 
-Transform PDFs into AI-powered summaries, flashcards, quizzes, and an AI tutor.
+![Version](https://img.shields.io/badge/version-v1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![Vercel](https://img.shields.io/badge/Deployed-Vercel-black)
 
-MentorAI is a modern AI study platform built with Next.js, TypeScript, Tailwind CSS, and Groq AI. Upload PDF notes to generate AI-powered summaries, flashcards, quizzes, and an AI tutor.
+Transform study materials into AI-powered summaries, flashcards, quizzes, and interactive tutoring.
+
+MentorAI is a modern AI study platform built with Next.js, TypeScript, Tailwind CSS, and Groq AI. It transforms uploaded study materials into interactive summaries, flashcards, quizzes, and AI-powered tutoring experiences designed to support active learning.
 
 # 🌐 Live Demo
 
 **Live Demo:** <https://mentor-ai-jet-seven.vercel.app>
+
+## 💡 Why I Built MentorAI
+
+Studying from PDFs often becomes a passive experience. I wanted to explore whether artificial intelligence could make learning more interactive by transforming static study materials into summaries, flashcards, quizzes, and guided conversations.
+
+MentorAI became an opportunity to combine document processing, large language models, and modern web development into a single application while learning how AI can enhance the way students study.
+
+Building this project challenged me to learn new technologies, connect multiple systems together, and think beyond writing code by designing software around a real learning experience.
+
+# 🛠 Tech Stack
+
+| Category | Technologies |
+|----------|--------------|
+| Frontend | Next.js, React, TypeScript, Tailwind CSS |
+| Artificial Intelligence | Groq API, Llama Models |
+| Document Processing | PDF Text Extraction |
+| Deployment | Vercel |
+| Version Control | Git & GitHub |
 
 # 📸 Screenshots
 
@@ -56,19 +80,6 @@ View your current study session and navigate between learning tools.
 
 ### 👤 Profile
 Access study information and learning statistics.
-
-
-
-# 🛠 Tech Stack
-
-| Category | Technologies |
-|----------|--------------|
-| Frontend | Next.js, React, TypeScript, Tailwind CSS |
-| Artificial Intelligence | Groq API, Llama Models |
-| Document Processing | PDF Text Extraction |
-| Deployment | Vercel |
-| Version Control | Git & GitHub |
-
 
 
 # 🚀 Getting Started
